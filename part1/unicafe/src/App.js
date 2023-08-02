@@ -4,27 +4,32 @@ const Button = ({ text, handleClick }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
+const StatisticLine = ({ text, value }) => {
+  return <p>{text} {value}</p>;
+};
+
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
   let average = (good + (neutral * 0) - bad) / all;
-  let positivePercentage = good / all * 100;
+  let positivePercentage = good / all * 100 + " %";
 
-  // when all = 0, average and positivePercentage are not displayed as NaN
   if (all === 0) {
-    average = 0;
-    positivePercentage = 0;
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    );
   }
 
   return (
-    <>
-      <h2>statistics</h2>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {average}</p>
-      <p>positive {positivePercentage} %</p>
-    </>
+    <div>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={all} />
+      <StatisticLine text="average" value={average} />
+      <StatisticLine text="positive" value={positivePercentage} />
+    </div>
   );
 };
 
@@ -39,6 +44,8 @@ function App() {
       <Button text="good" handleClick={() => setGood(good + 1)} />
       <Button text="neutral" handleClick={() => setNeutral(neutral + 1)} />
       <Button text="bad" handleClick={() => setBad(bad + 1)} />
+
+      <h2>statistics</h2>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
