@@ -8,9 +8,18 @@ const App = () => {
     setNewName(event.target.value);
   };
 
+  const checkSameName = (name) => {
+    return persons.some((person) => person.name === name);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    if (checkSameName(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    } else {
+      setPersons(persons.concat({ name: newName }));
+    }
     setNewName("");
   };
 
