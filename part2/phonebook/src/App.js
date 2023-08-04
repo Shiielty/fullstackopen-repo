@@ -53,7 +53,22 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (checkSameName(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const targetObj = persons.find((person) => person.name === newName);
+      const id = targetObj.id;
+      const newObj = { ...targetObj, number: newNumber };
+      if (
+        window.confirm(
+          `${newName} is already aded to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        personAPI.update(id, newObj).then((returnedResponse) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== id ? person : returnedResponse,
+            ),
+          );
+        });
+      }
       return;
     } else {
       const newPerson = {
