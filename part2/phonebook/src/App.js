@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import personAPI from "./services/personAPI";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [filteredPerson, setFilteredPerson] = useState([...persons]);
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personAPI.getAll().then((initialPerson) => {
@@ -67,6 +68,10 @@ const App = () => {
               person.id !== id ? person : returnedResponse,
             ),
           );
+          setNotificationMessage(`Update ${returnedResponse.name}'s number`);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 5000);
         });
       }
       return;
@@ -77,6 +82,10 @@ const App = () => {
       };
       personAPI.create(newPerson).then((newPerson) => {
         setPersons(persons.concat(newPerson));
+        setNotificationMessage(`Added ${newPerson.name}`);
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
       });
     }
     setNewName("");
@@ -86,6 +95,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notificationMessage} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
