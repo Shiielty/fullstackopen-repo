@@ -42,6 +42,14 @@ const App = () => {
     return persons.some((person) => person.name === name);
   };
 
+  const handleDelete = (id) => {
+    console.log("check delete button");
+    personAPI.deleteNote(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
+      setFilteredPerson(filteredPerson.filter((person) => person.id !== id));
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (checkSameName(newName)) {
@@ -82,6 +90,7 @@ const App = () => {
         filter={filter}
         persons={persons}
         filteredPerson={filteredPerson}
+        handleDelete={handleDelete}
       />
     </div>
   );
