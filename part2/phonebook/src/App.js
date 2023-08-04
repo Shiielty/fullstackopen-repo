@@ -5,6 +5,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Notification from "./components/Notification";
+import Error from "./components/Error";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,6 +14,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const [filteredPerson, setFilteredPerson] = useState([...persons]);
   const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     personAPI.getAll().then((initialPerson) => {
@@ -62,17 +64,32 @@ const App = () => {
           `${newName} is already aded to phonebook, replace the old number with a new one?`,
         )
       ) {
-        personAPI.update(id, newObj).then((returnedResponse) => {
-          setPersons(
-            persons.map((person) =>
-              person.id !== id ? person : returnedResponse,
-            ),
-          );
-          setNotificationMessage(`Update ${returnedResponse.name}'s number`);
-          setTimeout(() => {
-            setNotificationMessage(null);
-          }, 5000);
-        });
+        personAPI
+          .update(id, newObj)
+          .then((returnedResponse) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== id ? person : returnedResponse,
+              ),
+            );
+            setNotificationMessage(`Update ${returnedResponse.name}'s number`);
+            setNotificationType("info");
+            setTimeout(() => {
+              setNotificationMessage(null);
+              setNotificationType(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            console.error(error.message);
+            setNotificationMessage(
+              `Information of ${newName} has already been removed from server`,
+            );
+            setNotificationType("error");
+            setTimeout(() => {
+              setNotificationMessage(null);
+              setNotificationType(null);
+            }, 5000);
+          });
       }
       return;
     } else {
@@ -83,8 +100,10 @@ const App = () => {
       personAPI.create(newPerson).then((newPerson) => {
         setPersons(persons.concat(newPerson));
         setNotificationMessage(`Added ${newPerson.name}`);
+        setNotificationType("info");
         setTimeout(() => {
           setNotificationMessage(null);
+          setNotificationType(null);
         }, 5000);
       });
     }
@@ -96,7 +115,11 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={notificationMessage} />
+      {notificationType === "info" ? (
+        <Notification message={notificationMessage} />
+      ) : (
+        <Error message={notificationMessage} />
+      )}
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
