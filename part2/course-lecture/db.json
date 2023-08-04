@@ -17,12 +17,12 @@
     },
     {
       "content": "New notes send to database!!",
-      "important": false,
+      "important": true,
       "id": 4
     },
     {
       "content": "Another notes in your way!!",
-      "important": false,
+      "important": true,
       "id": 5
     },
     {
@@ -32,8 +32,13 @@
     },
     {
       "content": "response",
-      "important": true,
+      "important": false,
       "id": 7
+    },
+    {
+      "content": "",
+      "important": true,
+      "id": 8
     }
   ]
 }
