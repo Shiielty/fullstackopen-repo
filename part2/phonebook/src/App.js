@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import personAPI from "./services/personAPI";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
@@ -13,8 +14,8 @@ const App = () => {
   const [filteredPerson, setFilteredPerson] = useState([...persons]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    personAPI.getAll().then((initialPerson) => {
+      setPersons(initialPerson);
     });
   }, []);
 
@@ -51,9 +52,9 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      axios
-        .post("http://localhost:3001/persons", newPerson)
-        .then(setPersons(persons.concat(newPerson)));
+      personAPI.create(newPerson).then((newPerson) => {
+        setPersons(persons.concat(newPerson));
+      });
     }
     setNewName("");
     setNewNumber("");

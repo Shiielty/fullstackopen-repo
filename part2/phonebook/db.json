@@ -24,6 +24,11 @@
       "name": "Andreas Roy",
       "number": "01-23456",
       "id": 5
+    },
+    {
+      "name": "Violet",
+      "number": "09-8765",
+      "id": 6
     }
   ]
 }
